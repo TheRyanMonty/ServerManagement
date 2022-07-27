@@ -68,6 +68,7 @@ echo "- hosts: all
 Test the playbook:
 * ``` ansible-playbook -i hosts /etc/ansible/update_all.yaml -u root ```
 
+## Ansible Scheduling
 Edit cron for the user setup to run ansible:
 * ```crontab -e```
 
