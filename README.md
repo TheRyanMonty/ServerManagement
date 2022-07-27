@@ -26,3 +26,13 @@ srvmgr ansible_host=192.168.86.53
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3">>/etc/ansible/hosts
 ```
+
+Ensure a key is generated for SSH access for user:
+* ```ssh-keygen```
+
+Obtain the public key (Take note as this will be needed in the following steps):
+* ``` cat ~/.ssh/id_rsa.pub```
+
+Add the public key to the authorized_keys file to each host and user you want to run ansible commands as:
+* ``` echo "<public_key_from_above>" >> ~/.ssh/authorized_keys```
+
