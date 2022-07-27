@@ -38,7 +38,7 @@ Add the public key to the authorized_keys file to each host and user you want to
 
 Create a yaml playbook for updates:
 ```
-sudo echo "- hosts: servers
+echo "- hosts: *
   become: true
   become_user: root
   tasks:
