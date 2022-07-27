@@ -27,7 +27,7 @@ srvmgr ansible_host=192.168.86.53
 ansible_python_interpreter=/usr/bin/python3">>/etc/ansible/hosts
 ```
 
-Ensure a key is generated for SSH access for user:
+Ensure a ssh key is generated for SSH access for user that will be running the ansible jobs:
 * ```ssh-keygen```
 
 Obtain the public key (Take note as this will be needed in the following steps):
