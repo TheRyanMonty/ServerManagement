@@ -66,7 +66,7 @@ echo "- hosts: all
       when: reboot_required_file.stat.exists" > /etc/ansible/update_all.yaml
 ```
 Test the playbook:
-* ``` ansible-playbook -i hosts /etc/ansible/update_ubuntu.yaml -u root ```
+* ``` ansible-playbook -i hosts /etc/ansible/update_all.yaml -u root ```
 
 Edit cron for the user setup to run ansible:
 * ```crontab -e```
