@@ -62,3 +62,6 @@ echo "- hosts: all
         test_command: uptime
       when: reboot_required_file.stat.exists" > /etc/ansible/update_ubuntu.yaml
 ```
+Test the playbook:
+* ``` ansible-playbook -i hosts /etc/ansible/update_ubuntu.yaml -u root ```
+
