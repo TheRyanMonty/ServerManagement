@@ -10,7 +10,7 @@ Install ansible and dependencies:
 * ```sudo apt install ansible```
 
 Setup the ansible hosts file:
-* ```
+```
 sudo echo "[k3s]
 pm-k3s-s1 ansible_host=192.168.86.74
 pm-k3s-wl1 ansible_host=192.168.86.75
