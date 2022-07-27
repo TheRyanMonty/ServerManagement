@@ -36,7 +36,7 @@ Obtain the public key (Take note as this will be needed in the following steps):
 Add the public key to the authorized_keys file to each host and user you want to run ansible commands as:
 * ``` echo "<public_key_from_above>" >> ~/.ssh/authorized_keys```
 
-Create a yaml playbook for updates:
+Create a yaml playbook for updates (seperate out as needed):
 ```
 echo "- hosts: all
   become: true
@@ -63,8 +63,17 @@ echo "- hosts: all
         pre_reboot_delay: 0
         post_reboot_delay: 30
         test_command: uptime
-      when: reboot_required_file.stat.exists" > /etc/ansible/update_ubuntu.yaml
+      when: reboot_required_file.stat.exists" > /etc/ansible/update_all.yaml
 ```
 Test the playbook:
 * ``` ansible-playbook -i hosts /etc/ansible/update_ubuntu.yaml -u root ```
 
+Edit cron for the user setup to run ansible:
+* ```crontab -e```
+
+Paste the following for midnight on saturday morning (server management) sunday morning (for everything else):
+```
+0 0 * * 0 ansible-playbook -i hosts /etc/ansible/update_k3s.yaml -u root
+0 0 * * 0 ansible-playbook -i hosts /etc/ansible/update_homeassist.yaml -u root
+0 0 * * 6 ansible-playbook -i hosts /etc/ansible/update_servermgmt.yaml -u root
+```
