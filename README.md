@@ -73,6 +73,7 @@ Edit cron for the user setup to run ansible:
 
 Paste the following for midnight on saturday morning (server management) sunday morning (for everything else):
 ```
+#Ansible package updates for servers - list servers via cat /etc/ansible/hosts
 0 0 * * 0 ansible-playbook -i hosts /etc/ansible/update_k3s.yaml -u root
 0 0 * * 0 ansible-playbook -i hosts /etc/ansible/update_homeassist.yaml -u root
 0 0 * * 6 ansible-playbook -i hosts /etc/ansible/update_servermgmt.yaml -u root
