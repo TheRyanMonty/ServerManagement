@@ -48,6 +48,9 @@ echo "- hosts: all
     - name: Upgrade all packages on servers
       apt: upgrade=dist force_apt_get=yes
 
+    - name: Autoremove uneeded packages
+      apt: autoremove=yes
+
     - name: Check if a reboot is needed on all servers
       register: reboot_required_file
       stat: path=/var/run/reboot-required get_md5=no
