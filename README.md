@@ -82,7 +82,7 @@ Paste the following for midnight on saturday morning (server management) sunday 
 0 0 * * 6 /usr/bin/ansible-playbook -i /etc/ansible/hosts /etc/ansible/update_servermgmt.yaml -u root
 ```
 
-###Dynamic DNS Updates
+### Dynamic DNS Updates
 Install ddclient:
 * ```sudo apt install ddclient```
 
