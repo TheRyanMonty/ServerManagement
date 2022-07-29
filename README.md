@@ -1,6 +1,10 @@
 # Server Management
 HomeLab Server Management Documentation and Build
 
+## Good routine questions:
+* Is everything that needs to be backed up, backed up or have a data replication strategy?
+- this is a test
+
 ## Server setup
 Complete post VM setup:
 * ```curl -sfL https://raw.githubusercontent.com/TheRyanMonty/HomeLab/main/post_vm_build.sh | sh -```
