@@ -112,3 +112,5 @@ Paste the following for midnight on saturday morning (server management) sunday 
 ### Zabbix Installation
 The [Zabbix installation instructions](https://www.zabbix.com/documentation/current/en/manual/installation/install_from_packages/debian_ubuntu) don't hit on a couple of items. Mysql server must be installed prior to installation:
 * ``` apt install mysql-server ```
+
+Change mysql root and zabbix passwords. Also be sure to change the zabbix password in the /etc/zabbix/zabbix_server.conf file to match.
