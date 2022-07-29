@@ -16,7 +16,8 @@ The purpose of this repo is, selfishly, to document the setup and configuration 
 
 
 ### Good routine questions:
-* Is everything that needs to be backed up, backed up or have a data replication strategy?
+1. Is everything that needs to be backed up, backed up or have a data replication strategy?
+2. Are passwords reasonable?
 
 
 ## Server setup
@@ -109,4 +110,5 @@ Paste the following for midnight on saturday morning (server management) sunday 
 0 0 * * 6 /usr/bin/ansible-playbook -i /etc/ansible/hosts /etc/ansible/update_servermgmt.yaml -u root
 ```
 ### Zabbix Installation
-[Zabbix installation instructions](https://www.zabbix.com/documentation/current/en/manual/installation/install_from_packages/debian_ubuntu)
+The [Zabbix installation instructions](https://www.zabbix.com/documentation/current/en/manual/installation/install_from_packages/debian_ubuntu) don't hit on a couple of items. Mysql server must be installed prior to installation:
+* ``` apt install mysql-server ```
