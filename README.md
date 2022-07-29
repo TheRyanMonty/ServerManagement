@@ -15,7 +15,7 @@ The purpose of this repo is, selfishly, to document the setup and configuration 
 - zabbix = Server and service monitoring tool
 
 
-## Good routine questions:
+### Good routine questions:
 * Is everything that needs to be backed up, backed up or have a data replication strategy?
 
 
@@ -28,7 +28,7 @@ Install ddclient:
 * ```sudo apt install ddclient```
 
 
-TODO: Critical file(s) to backup:
+**TODO:** Critical file(s) to backup:
   /etc/ddclient.conf
 
 
