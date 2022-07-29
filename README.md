@@ -1,6 +1,20 @@
 # Server Management
 HomeLab Server Management Documentation and Build
 
+## Introduction
+The purpose of this repo is, selfishly, to document the setup and configuration I have outside of my network as a reference point in the future. Unselfishly I hope putting this in a public space will help others who are attempting to do a similar setup (high level defined below) be able to do so in a way that's easier than my learning epxerience and to have as a reference point of a working configuration.
+
+### Goals of the configuration:
+1. To update my hosting provider (google domains at the time of this writing) to update dns based on my non-static public IP so I can have internet facing services reachable by domain name.
+2. To ease server maintenance activities via automation
+3. To monitor logs, kubernetes, web services, etc. and take action (notification, trigger automated healing, etc.) as needed.
+
+### What's doing the work:
+- ddclient = Dynamic DNS update service
+- ansible = Server automation management toolset
+- zabbix = Server and service monitoring tool
+
+
 ## Good routine questions:
 * Is everything that needs to be backed up, backed up or have a data replication strategy?
 
@@ -8,6 +22,15 @@ HomeLab Server Management Documentation and Build
 ## Server setup
 Complete post VM setup:
 * ```curl -sfL https://raw.githubusercontent.com/TheRyanMonty/HomeLab/main/post_vm_build.sh | sh -```
+
+### Dynamic DNS Updates
+Install ddclient:
+* ```sudo apt install ddclient```
+
+
+TODO: Critical file(s) to backup:
+  /etc/ddclient.conf
+
 
 ### Ansible Installation
 Install ansible and dependencies:
@@ -72,7 +95,7 @@ echo "- hosts: all
 Test the playbook:
 * ``` ansible-playbook -i hosts /etc/ansible/update_all.yaml -u root ```
 
-## Ansible Scheduling
+### Ansible Scheduling
 Edit cron for the user setup to run ansible:
 * ```crontab -e```
 
@@ -85,10 +108,3 @@ Paste the following for midnight on saturday morning (server management) sunday 
 0 0 * * 0 /usr/bin/ansible-playbook -i /etc/ansible/hosts /etc/ansible/update_homeassist.yaml -u root
 0 0 * * 6 /usr/bin/ansible-playbook -i /etc/ansible/hosts /etc/ansible/update_servermgmt.yaml -u root
 ```
-
-### Dynamic DNS Updates
-Install ddclient:
-* ```sudo apt install ddclient```
-
-Critical file(s) to backup:
-  /etc/ddclient.conf
