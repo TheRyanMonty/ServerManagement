@@ -95,7 +95,7 @@ echo "- hosts: all
 Test the playbook:
 * ``` ansible-playbook -i hosts /etc/ansible/update_all.yaml -u root ```
 
-### Ansible Scheduling
+#### Ansible Scheduling
 Edit cron for the user setup to run ansible:
 * ```crontab -e```
 
@@ -108,3 +108,5 @@ Paste the following for midnight on saturday morning (server management) sunday 
 0 0 * * 0 /usr/bin/ansible-playbook -i /etc/ansible/hosts /etc/ansible/update_homeassist.yaml -u root
 0 0 * * 6 /usr/bin/ansible-playbook -i /etc/ansible/hosts /etc/ansible/update_servermgmt.yaml -u root
 ```
+### Zabbix Installation
+[Zabbix installation instructions](https://www.zabbix.com/documentation/current/en/manual/installation/install_from_packages/debian_ubuntu)
