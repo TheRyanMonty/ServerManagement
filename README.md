@@ -110,6 +110,15 @@ Paste the following for midnight on saturday morning (server management) sunday 
 0 0 * * 0 /usr/bin/ansible-playbook -i /etc/ansible/hosts /etc/ansible/update_homeassist.yaml -u root
 0 0 * * 6 /usr/bin/ansible-playbook -i /etc/ansible/hosts /etc/ansible/update_servermgmt.yaml -u root
 ```
+
+### Create logging location owned by ansible user
+* NOTE: /etc/ansible/ansible.cfg contains log file location
+```
+sudo mkdir /var/log/ansible/
+sudo chown monty /var/log/ansible
+sudo chmod 775 /var/log/ansible
+```
+
 **TODO:** Critical file(s) to backup:
   /etc/ansible/ansible.cfg
 
