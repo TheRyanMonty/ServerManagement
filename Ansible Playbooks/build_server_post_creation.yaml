@@ -1,0 +1,34 @@
+--- 
+  # Play1 - Post VM Creation Tasks
+  - name: Play - Post VM Creation Tasks
+    hosts: all
+    become: yes
+    become_user: root
+    tasks:
+      - name: Set timezone to central
+        timezone:
+          name: America/Chicago
+      
+      - name: Install qemu-guest-agent and nfs-common
+        apt:
+          name: "{{ item }}"
+          update_cache: yes
+        loop:
+          - qemu-guest-agent
+          - nfs-common
+
+      - name: Set variable for determining whether root needs vi added to .bashrc
+        shell: cat ~/.bashrc
+        register: root_bashrc
+
+      - name: Set vi as the default shell editor if it isn't already set
+        shell: echo "set -o vi" >> ~/.bashrc
+        when: root_bashrc.stdout.find('set -o vi') == -1
+
+      - name: Set variable for determining whether root needs vi added to .bashrc
+        shell: cat /home/monty/.bashrc
+        register: monty_bashrc
+
+      - name: Set vi as the default shell editor if it isn't already set
+        shell: echo "set -o vi" >> /home/monty/.bashrc
+        when: monty_bashrc.stdout.find('set -o vi') == -1
