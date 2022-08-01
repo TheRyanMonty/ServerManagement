@@ -120,7 +120,7 @@ sudo chmod 775 /var/log/ansible
 ```
 
 **TODO:** Critical file(s) to backup:
-  /etc/ansible/ansible.cfg
+  /etc/ansible/*
 
 ### Zabbix Installation
 The [Zabbix installation instructions](https://www.zabbix.com/documentation/current/en/manual/installation/install_from_packages/debian_ubuntu) don't hit on a couple of items. Mysql server must be installed prior to installation:
