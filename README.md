@@ -114,7 +114,7 @@ dpkg -i zabbix-release_6.2-1+ubuntu20.04_all.deb
 apt update
 apt install zabbix-agent
 ```
-* Edit /etc/zabbix/zabbix_agentd.conf and update Hostname= as the hostname of the installation host and Server= as the server ip
+* Edit /etc/zabbix/zabbix_agentd.conf and update Hostname= as the hostname of the installation host and Server= and ServerActive= as the server ip
 * Restart the agent and ensure it's setup to run at boot
 ```
 sudo systemctl restart zabbix-agent
