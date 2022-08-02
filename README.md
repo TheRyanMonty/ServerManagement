@@ -119,13 +119,17 @@ sudo chown monty /var/log/ansible
 sudo chmod 775 /var/log/ansible
 ```
 
-**TODO:** Critical file(s) to backup:
-  /etc/ansible/*
 
 ### Zabbix Installation
 The [Zabbix installation instructions](https://www.zabbix.com/documentation/current/en/manual/installation/install_from_packages/debian_ubuntu) don't hit on a couple of items. Mysql server must be installed prior to installation:
 * ``` apt install mysql-server ```
 
-TODO: Change mysql root and zabbix passwords. Also be sure to change the zabbix password in the /etc/zabbix/zabbix_server.conf file to match.
-
-TODO: Determine backup strategy and needed files for rebuild
+#### Note: Be sure to change mysql root and zabbix passwords. Also be sure to change the zabbix password in the /etc/zabbix/zabbix_server.conf file to match.
+* Edit the /etc/zabbix/zabbix_server.conf file - the DB_PASSWORD= line to add your new password
+* Follow the instructions below to set the password for the zabbix user in mysql:
+```
+mysql -uroot
+use zabbix;
+alter user 'zabbix'@'localhost' identified by '<new_password>';
+quit
+```
