@@ -106,3 +106,17 @@ use zabbix;
 alter user 'zabbix'@'localhost' identified by '<new_password>';
 quit
 ```
+### Zabbix agent installation instructions (on all other servers, not the main zabbix server)
+* Install the zabbix repo and the agent package
+```
+wget https://repo.zabbix.com/zabbix/6.2/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.2-1+ubuntu20.04_all.deb
+dpkg -i zabbix-release_6.2-1+ubuntu20.04_all.deb
+apt update
+apt install zabbix-agent
+```
+* Edit /etc/zabbix/zabbix_agentd.conf and update hostname= as the hostname of the installation host and server= as the server ip
+* Restart the agent and ensure it's setup to run at boot
+```
+sudo systemctl restart zabbix-agent
+sudo systemctl enable zabbix-agent 
+```
