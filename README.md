@@ -38,22 +38,22 @@ Critical file(s) to backup:
 Install ansible and dependencies:
 * ```sudo apt install ansible```
 
-Setup the ansible hosts file:
+Setup the ansible directories and pull down host files and playbooks:
 ```
-sudo echo "[k3s]
-pm-k3s-s1 ansible_host=192.168.86.74
-pm-k3s-wl1 ansible_host=192.168.86.75
-pm-k3s-wl2 ansible_host=192.168.86.78
-
-[homeassistant]
-homeassistant ansible_host=192.168.86.39
-
-[servermgmt]
-srvmgr ansible_host=192.168.86.53
-
-
-[all:vars]
-ansible_python_interpreter=/usr/bin/python3">>/etc/ansible/hosts
+#Create playbooks and inventories directories
+mkdir -p /etc/ansible/playbooks
+mkdir -p /etc/ansible/inventories
+#Grab needed inventory files
+cd /etc/ansible/playbooks
+wget https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/main/Ansible%20Playbooks/build_server_k3s_server.yaml
+wget https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/main/Ansible%20Playbooks/build_server_post_creation.yaml
+#Grab inventoires
+cd /etc/ansible/inventories
+wget https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/main/Ansible%20Inventories/homeassist
+wget https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/main/Ansible%20Inventories/hosts
+wget https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/main/Ansible%20Inventories/k3s_servers
+wget https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/main/Ansible%20Inventories/new_server
+wget https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/main/Ansible%20Inventories/servermgmt
 ```
 
 Ensure a ssh key is generated for SSH access for user that will be running the ansible jobs:
@@ -65,37 +65,8 @@ Obtain the public key (Take note as this will be needed in the following steps):
 Add the public key to the authorized_keys file to each host and user you want to run ansible commands as:
 * ``` echo "<public_key_from_above>" >> ~/.ssh/authorized_keys```
 
-Create a yaml playbook for updates (seperate out as needed):
-```
-echo "- hosts: all
-  become: true
-  become_user: root
-  tasks:
-    - name: Update apt repo and cache on all Debian/Ubuntu boxes
-      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
-
-    - name: Upgrade all packages on servers
-      apt: upgrade=dist force_apt_get=yes
-
-    - name: Autoremove uneeded packages
-      apt: autoremove=yes
-
-    - name: Check if a reboot is needed on all servers
-      register: reboot_required_file
-      stat: path=/var/run/reboot-required get_md5=no
-
-    - name: Reboot the box if kernel updated
-      reboot:
-        msg: "Reboot initiated by Ansible for kernel updates"
-        connect_timeout: 5
-        reboot_timeout: 300
-        pre_reboot_delay: 0
-        post_reboot_delay: 30
-        test_command: uptime
-      when: reboot_required_file.stat.exists" > /etc/ansible/update_all.yaml
-```
 Test the playbook:
-* ``` ansible-playbook -i hosts /etc/ansible/update_all.yaml -u root ```
+* ``` /usr/bin/ansible-playbook -i /etc/ansible/inventories/homeassist /etc/ansible/playbooks/update_all.yaml -u root ```
 
 #### Ansible Scheduling
 Edit cron for the user setup to run ansible:
