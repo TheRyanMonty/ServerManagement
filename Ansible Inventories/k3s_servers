@@ -1,0 +1,6 @@
+[k3s]
+pm-k3s-s1 ansible_host=192.168.1.120
+pm-k3s-wl1 ansible_host=192.168.1.115
+pm-k3s-wl2 ansible_host=192.168.1.121
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
