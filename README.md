@@ -29,6 +29,8 @@ Complete post VM setup:
 Install ddclient:
 * ```sudo apt install ddclient```
 
+Ensure to edit the following file to enable daemon mode, otherwise ddclient will need to be run manually:
+  /etc/default/ddclient
 
 Critical file(s) to backup:
   /etc/ddclient.conf
