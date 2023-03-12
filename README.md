@@ -5,12 +5,10 @@ HomeLab Server Management Documentation and Build
 The purpose of this repo is, selfishly, to document the setup and configuration I have outside of my network as a reference point in the future. Unselfishly I hope putting this in a public space will help others who are attempting to do a similar setup (high level defined below) be able to do so in a way that's easier than my learning epxerience and to have as a reference point of a working configuration.
 
 ### Goals of the configuration:
-1. To update my hosting provider (google domains at the time of this writing) to update dns based on my non-static public IP so I can have internet facing services reachable by domain name.
-2. To ease server maintenance activities via automation
-3. To monitor logs, kubernetes, web services, etc. and take action (notification, trigger automated healing, etc.) as needed.
+1. To ease server maintenance activities via automation
+2. To monitor logs, kubernetes, web services, etc. and take action (notification, trigger automated healing, etc.) as needed.
 
 ### What's doing the work:
-- ddclient = Dynamic DNS update service
 - ansible = Server automation management toolset
 - zabbix = Server and service monitoring tool
 
@@ -25,15 +23,6 @@ The purpose of this repo is, selfishly, to document the setup and configuration 
 Complete post VM setup:
 * ```curl -sfL https://raw.githubusercontent.com/TheRyanMonty/HomeLab/main/post_vm_build.sh | sh -```
 
-### Dynamic DNS Updates
-Install ddclient:
-* ```sudo apt install ddclient```
-
-Ensure to edit the following file to enable daemon mode, otherwise ddclient will need to be run manually:
-  /etc/default/ddclient
-
-Critical file(s) to backup:
-  /etc/ddclient.conf
 
 
 ### Ansible Installation
