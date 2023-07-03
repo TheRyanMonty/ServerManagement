@@ -89,7 +89,6 @@ The [Zabbix installation instructions](https://www.zabbix.com/documentation/curr
 
 #### Note: Be sure to change mysql root and zabbix passwords. Also be sure to change the zabbix password in the /etc/zabbix/zabbix_server.conf file to match.
 * Edit the /etc/zabbix/zabbix_server.conf file - the DB_PASSWORD= line to add your new password
-* Edit the /etc/zabbix/web/zabbix_php.conf file - modify the $DB['PASSWORD'] line to ensure the new password is updated on the right column.
 * Follow the instructions below to set the password for the zabbix user in mysql:
 ```
 mysql -uroot
