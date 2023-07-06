@@ -110,3 +110,19 @@ apt install zabbix-agent
 sudo systemctl restart zabbix-agent
 sudo systemctl enable zabbix-agent 
 ```
+### Install Certbot and download wildcard certs
+* Install Certbot
+```
+sudo apt install certbot
+```
+* Register for certificate
+```
+sudo certbot certonly --manual \
+  --preferred-challenges=dns \
+  --email ryan.g.montgomery@gmail.com \
+  --server https://acme-v02.api.letsencrypt.org/directory \
+  --agree-tos \
+  --manual-public-ip-logging-ok \
+  -d "*.montysplace.org"
+```
+* Need to determine best way to automate and make accessible for sites
