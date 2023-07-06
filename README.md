@@ -110,7 +110,7 @@ apt install zabbix-agent
 sudo systemctl restart zabbix-agent
 sudo systemctl enable zabbix-agent 
 ```
-### Install Certbot and download wildcard certs
+### Install Certbot and download wildcard certs for deployment on internal servers
 * Install Certbot
 ```
 sudo apt install certbot
