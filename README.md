@@ -10,7 +10,7 @@ The purpose of this repo is, selfishly, to document the setup and configuration 
 
 ### What's doing the work:
 - ansible = Server automation management toolset
-- zabbix = Server and service monitoring tool
+- prometheus = Server and service monitoring tool
 
 
 ### Good routine questions:
@@ -83,32 +83,14 @@ sudo chmod 775 /var/log/ansible
 ```
 
 
-### Zabbix Installation
-The [Zabbix installation instructions](https://www.zabbix.com/documentation/current/en/manual/installation/install_from_packages/debian_ubuntu) don't hit on a couple of items. Mysql server must be installed prior to installation:
-* ``` apt install mysql-server ```
-
-#### Note: Be sure to change mysql root and zabbix passwords. Also be sure to change the zabbix password in the /etc/zabbix/zabbix_server.conf file to match.
-* Edit the /etc/zabbix/zabbix_server.conf file - the DB_PASSWORD= line to add your new password
-* Follow the instructions below to set the password for the zabbix user in mysql:
+### Prometheus Installation
 ```
-mysql -uroot
-use zabbix;
-alter user 'zabbix'@'localhost' identified by '<new_password>';
-quit
-```
-### Zabbix agent installation instructions (on all other servers, not the main zabbix server)
-* Install the zabbix repo and the agent package
-```
-wget https://repo.zabbix.com/zabbix/6.2/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.2-1+ubuntu20.04_all.deb
-dpkg -i zabbix-release_6.2-1+ubuntu20.04_all.deb
-apt update
-apt install zabbix-agent
-```
-* Edit /etc/zabbix/zabbix_agentd.conf and update Hostname= as the hostname of the installation host and Server= and ServerActive= as the server ip
-* Restart the agent and ensure it's setup to run at boot
-```
-sudo systemctl restart zabbix-agent
-sudo systemctl enable zabbix-agent 
+docker run --detach \
+    --name my-prometheus \
+    --publish 9090:9090 \
+    --volume prometheus-volume:/prometheus \
+    --volume /etc/prometheus.yml:/etc/prometheus/prometheus.yml \
+    prom/prometheus
 ```
 ### Install Certbot and download wildcard certs for deployment on internal servers
 * Install Certbot
