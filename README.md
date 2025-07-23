@@ -169,5 +169,21 @@ DNS.2 = montysplace.local
 ```
 openssl req -x509 -nodes -days 825 -key montysplace.key -in montysplace.csr -out montysplace.crt -extensions v3_req -config san.cnf
 ```
+## Grafana Loki and Alloy testing (not yet functional)
+* Add Grafana repo and install Grafana loki and alloy
+```
+sudo mkdir -p /etc/apt/keyrings/
+wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null
+echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+sudo apt update; sudo apt install grafana alloy loki -y
+```
+* Setup web admin - default is admin/admin - https://syslog.montysplace.local:3000/
+** sign in and reset admin password to something more secure
+```
+sudo groupadd loki
+sudo mkdir -p /var/lib/loki/index /var/lib/loki/cache /var/lib/loki/chunks /var/lib/loki/rules
+sudo chown -R loki:loki /var/lib/loki
 
-
+sudo systemctl start loki grafana alloy
+sudo systemctl enable loki grafana alloy
+```
