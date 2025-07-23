@@ -108,3 +108,38 @@ sudo certbot certonly --manual \
   -d "*.montysplace.org"
 ```
 * Need to determine best way to automate and make accessible for sites
+
+## DNS Setup
+DNS is setup as of this writing on a seperate VM for testing
+* Install bind9 and dnsutils
+...
+sudo apt install bind9 dnsutils
+...
+
+* Set dns server as primary and primary/reverse zones
+...
+sudo echo "zone \"montysplace.local\" {
+    type master;
+    file \"/etc/bind/db.montysplace.local\";
+};
+
+zone \"1.50.10.in-addr.arpa\" {
+    type master;
+    file \"/etc/bind/db.10.50.1\";
+};
+
+zone \"10.50.10.in-addr.arpa\" {
+    type master;
+    file \"/etc/bind/db.10.50.10\";
+};" >> /etc/bind/named.conf.local
+...
+
+* Pull down DB files
+My current 3 db files (db.montysplace.local db.10.50.1 and db.10.50.10) are backed up on my NAS under server backups\dns, they go in /etc/bind/
+
+* Restart bind
+...
+sudo systemctl restart bind9
+...
+
+
