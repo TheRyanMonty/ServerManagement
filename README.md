@@ -142,4 +142,32 @@ My current 3 db files (db.montysplace.local db.10.50.1 and db.10.50.10) are back
 sudo systemctl restart bind9
 ```
 
+## Create Self signed certificates for internal services
+* create priv key and csr
+```
+openssl req -new -newkey rsa:2048 -nodes -keyout montysplace.key -out montysplace.csr -subj "/CN=*.montysplace.local"
+```
+* Create san.cnf:
+```
+[ req ]
+distinguished_name=req_distinguished_name
+x509_extensions = v3_req
+prompt = no
+
+[ req_distinguished_name ]
+CN = *.montysplace.local
+
+[ v3_req ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = *.montysplace.local
+DNS.2 = montysplace.local
+```
+
+* Generate the certificate
+```
+openssl req -x509 -nodes -days 825 -key montysplace.key -in montysplace.csr -out montysplace.crt -extensions v3_req -config san.cnf
+```
+
 
