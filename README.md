@@ -234,3 +234,5 @@ loki.source.file "log_scrape" {
     tail_from_end = true
 }
 ```
+TODO: Obtain systemd-journald pieces for grafana
+TODO: Determine ways to isolate appropriate data from foreign system for searching and aggregation
