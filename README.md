@@ -187,3 +187,50 @@ sudo chown -R loki:loki /var/lib/loki
 sudo systemctl start loki grafana alloy
 sudo systemctl enable loki grafana alloy
 ```
+*setup rsyslogd
+```
+vi /etc/rsyslogd.conf
+```
+*uncomment the module and input lines:
+```
+# provides UDP syslog reception
+module(load="imudp")
+input(type="imudp" port="514")
+
+# provides TCP syslog reception
+module(load="imtcp")
+input(type="imtcp" port="514")
+```
+*Add the following lines under the uncommented lines to create custom logfiles per host
+```
+$template remote-incoming-logs,"/var/log/%HOSTNAME%/%PROGRAMNAME%.log"
+*.* ?remote-incoming-logs
+```
+*Change ownership of logs
+```
+chown syslog:adm /var/log
+systemctl restart rsyslog
+```
+*Test alloy file
+```
+loki.write "local" {
+  endpoint {
+    url = "http://127.0.0.1:3100/loki/api/v1/push"
+  }
+}
+
+local.file_match "local_files" {
+    path_targets = [
+        {"__path__" = "/var/log/syslog", "job" = "logs", "hostname" = constants.hostname},
+        {"__path__" = "/var/log/syslog_dir/*log", "job" = "logs", "hostname" = constants.hostname},
+        {"__path__" = "/var/log/omada.montysplace.local_dir/*log", "job" = "logs", "hostname" = constants.hostname}]
+    sync_period  = "5s"
+}
+
+
+loki.source.file "log_scrape" {
+    targets    = local.file_match.local_files.targets
+    forward_to = [loki.write.local.receiver]
+    tail_from_end = true
+}
+```
