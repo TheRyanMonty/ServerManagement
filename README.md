@@ -224,4 +224,16 @@ systemctl restart rsyslog
 ```
 sudo wget -O /etc/alloy/config.alloy https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/alloy/config.alloy
 ```
+
+## Deploy Alloy to other nodes:
+* Grab software and install
+```
+sudo mkdir -p /etc/apt/keyrings/
+wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null
+echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+sudo apt update; sudo apt install alloy -y
+```
+* Grab alloy config
+sudo wget -O /etc/alloy/config.alloy https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/alloy/config.alloy
+
 TODO: Determine ways to isolate appropriate data from foreign system for searching and aggregation
