@@ -133,6 +133,16 @@ zone \"10.50.10.in-addr.arpa\" {
     file \"/etc/bind/db.10.50.10\";
 };" >> /etc/bind/named.conf.local
 ```
+* Disable ipv6 to prevent constant ipv6 related errors
+```
+sudo systemctl edit bind9
+```
+* Insert this between the first and second block of comments
+```
+[Service]
+ExecStart=
+ExecStart=/usr/sbin/named -4 -f $OPTIONS
+```
 
 * Pull down DB files
 My current 3 db files (db.montysplace.local db.10.50.1 and db.10.50.10) are backed up on my NAS under server backups\dns, they go in /etc/bind/
