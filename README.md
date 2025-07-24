@@ -216,9 +216,8 @@ input(type="imtcp" port="514")
 $template remote-incoming-logs,"/var/log/%HOSTNAME%_%PROGRAMNAME%logs.log"
 *.* ?remote-incoming-logs
 ```
-* Change ownership of logs
+* Restart rsyslog
 ```
-chown syslog:adm /var/log
 systemctl restart rsyslog
 ```
 * Grab the alloy config file for log parsing
