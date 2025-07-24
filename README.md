@@ -234,6 +234,9 @@ echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stab
 sudo apt update; sudo apt install alloy -y
 ```
 * Grab alloy config
+```
 sudo wget -O /etc/alloy/config.alloy https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/alloy/config.alloy
-
+sudo systemctl start alloy
+sudo systemctl enable alloy
+```
 TODO: Determine ways to isolate appropriate data from foreign system for searching and aggregation
