@@ -145,7 +145,7 @@ ExecStart=/usr/sbin/named -4 -f $OPTIONS
 ```
 
 * Pull down DB files
-My current 3 db files (db.montysplace.local db.10.50.1 and db.10.50.10) are backed up on my NAS under server backups\dns, they go in /etc/bind/
+My current 3 db files (db.montysplace.local db.10.50.1 and db.10.50.10) and named.conf.options are backed up on my NAS under server backups\dns, they go in /etc/bind/
 
 * Restart bind
 ```
