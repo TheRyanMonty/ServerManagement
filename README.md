@@ -203,7 +203,7 @@ input(type="imtcp" port="514")
 ```
 *Add the following lines under the uncommented lines to create custom logfiles per host
 ```
-$template remote-incoming-logs,"/var/log/%HOSTNAME%/%PROGRAMNAME%.log"
+$template remote-incoming-logs,"/var/log/%HOSTNAME%_%PROGRAMNAME%logs.log"
 *.* ?remote-incoming-logs
 ```
 *Change ownership of logs
