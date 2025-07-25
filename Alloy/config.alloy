@@ -8,6 +8,11 @@ loki.source.journal "local_journal" {
   max_age       = "24h0m0s"
   // Apply relabeling rules to the logs
   relabel_rules = discovery.relabel.local_journal.rules
+  //Define some labels
+    labels        = {
+      component = "journal_export",
+      instance = constants.hostname,
+    }
   // Send logs to the local Loki instance
   forward_to    = [loki.write.local.receiver]
 }
@@ -39,6 +44,7 @@ discovery.relabel "local_journal" {
     source_labels = ["__journal_priority_keyword"]
     target_label  = "level"
   }
+
 }
 
 // /////////////
@@ -56,7 +62,7 @@ local.file_match "local_syslog" {
     // Add instance label with hostname
     instance    = constants.hostname,
     // Add job label for logs
-    job         = "integrations/node_exporter",
+    job         = "syslog_export",
   }]
 }
 
