@@ -1,30 +1,34 @@
+// /////////////
+// LOGGING OPTIONS
+// /////////////
+logging {
+  level  = "warn"    // Options: "debug", "info", "warn", "error"
+  format = "logfmt"   // Options: "logfmt", "json"
+}
+
+// /////////////
+// JOURNAL
+// /////////////
+
 // Collect logs from systemd journal for node_exporter integration
-loki.source.journal "logs_integrations_integrations_node_exporter_journal_scrape" {
+loki.source.journal "local_journal" {
   // Only collect logs from the last 24 hours
   max_age       = "24h0m0s"
   // Apply relabeling rules to the logs
-  relabel_rules = discovery.relabel.logs_integrations_integrations_node_exporter_journal_scrape.rules
+  relabel_rules = discovery.relabel.local_journal.rules
+  //Define some labels
+    labels        = {
+      component = "journal_export",
+      instance = constants.hostname,
+      hostname = constants.hostname,
+      job = "journal_export",
+    }
   // Send logs to the local Loki instance
-  forward_to    = [loki.write.local.receiver]
-}
-
-// Define which log files to collect for node_exporter
-local.file_match "logs_integrations_integrations_node_exporter_direct_scrape" {
-  path_targets = [{
-    // Target localhost for log collection
-    __address__ = "localhost",
-    // Collect standard system logs
-    //__path__    = "/var/log/{syslog,messages,*.log}",
-    __path__    = "/var/log/syslog",
-    // Add instance label with hostname
-    instance    = constants.hostname,
-    // Add job label for logs
-    job         = "integrations/node_exporter",
-  }]
+  forward_to    = [loki.write.to_loki.receiver]
 }
 
 // Define relabeling rules for systemd journal logs
-discovery.relabel "logs_integrations_integrations_node_exporter_journal_scrape" {
+discovery.relabel "local_journal" {
   targets = []
 
   rule {
@@ -50,18 +54,74 @@ discovery.relabel "logs_integrations_integrations_node_exporter_journal_scrape" 
     source_labels = ["__journal_priority_keyword"]
     target_label  = "level"
   }
+
+}
+
+// /////////////
+// LOGS
+// /////////////
+
+// Define which log files to collect for node_exporter
+local.file_match "local_syslog" {
+  path_targets = [{
+    // Target localhost for log collection
+    __address__ = "localhost",
+    // Collect standard system logs
+    //__path__    = "/var/log/{syslog,messages,*.log}",
+    __path__    = "/var/log/syslog",
+    // Add instance label with hostname
+    instance    = constants.hostname,
+    // Add job label for logs
+    job         = "syslog_export",
+  }]
 }
 
 // Collect logs from files for node_exporter
-loki.source.file "logs_integrations_integrations_node_exporter_direct_scrape" {
+loki.source.file "local_syslog" {
   // Use targets defined in local.file_match
-  targets    = local.file_match.logs_integrations_integrations_node_exporter_direct_scrape.targets
+  targets    = local.file_match.local_syslog.targets
   // Send logs to the local Loki instance
-  forward_to = [loki.write.local.receiver]
+  forward_to = [loki.write.to_loki.receiver]
 }
 
+//loki.process "syslog_relabels" {
+    // For the syslog server, grab the hostname and associate it to the instance value
+    // Also if omada, <ErrCount>0</ErrCount> is caught, downgrade that to info from error
+//    stage.regex {
+//        source = "__log__"
+//        expression = `^\S+\s+(\S+)`
+//    }
+//
+//    stage.labels {
+//        values = {
+//            hostname = "$1",
+//        }
+//    }
+
+//    forward_to = [loki.write.to_loki.receiver]
+//}
+
+//loki.relabel "syslog_relabels" {
+    //extract the second space delimited field from the log line and associate it to instance
+    //this is for hosts with other hosts sending rsyslog information to it
+//    rule {
+//        action = "replace"
+//        source_labels = "__log__" 
+//        regex = `^\S+\s+(\S+)`
+//        target_label = "hostname" 
+//    }
+//
+//    forward_to = [loki.write.to_loki.receiver]
+//}
+
+
+
+// /////////////
+// OUT TO LOKI
+// /////////////
+
 // Define where to send logs for storage
-loki.write "local" {
+loki.write "to_loki" {
     endpoint {
         // Send logs to a locally running Loki instance
         url ="http://syslog.montysplace.local:3100/loki/api/v1/push"
