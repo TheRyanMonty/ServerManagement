@@ -224,7 +224,7 @@ systemctl restart rsyslog
 ```
 * Grab the alloy config file for log parsing
 ```
-sudo wget -O /etc/alloy/config.alloy https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/alloy/config.alloy
+sudo wget -O /etc/alloy/config.alloy https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/Alloy/config.alloy
 ```
 
 ## Deploy Alloy to other nodes:
@@ -237,7 +237,7 @@ sudo apt update; sudo apt install alloy -y
 ```
 * Grab alloy config
 ```
-sudo wget -O /etc/alloy/config.alloy https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/alloy/config.alloy
+sudo wget -O /etc/alloy/config.alloy https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/Alloy/config.alloy
 sudo systemctl start alloy
 sudo systemctl enable alloy
 ```
