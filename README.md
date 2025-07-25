@@ -191,8 +191,10 @@ sudo apt update; sudo apt install grafana alloy loki -y
 ** Sign in and reset admin password to something more secure
 ```
 sudo groupadd loki
-sudo mkdir -p /var/lib/loki/index /var/lib/loki/cache /var/lib/loki/chunks /var/lib/loki/rules
+sudo mkdir -p /var/lib/loki/index /var/lib/loki/cache /var/lib/loki/chunks /var/lib/loki/rules /var/lib/loki/compactor
 sudo chown -R loki:loki /var/lib/loki
+
+sudo wget -O /etc/loki/config.yml https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/Loki/config.yml
 
 sudo systemctl start loki grafana alloy
 sudo systemctl enable loki grafana alloy
