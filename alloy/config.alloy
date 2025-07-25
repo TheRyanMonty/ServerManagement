@@ -18,7 +18,6 @@ loki.source.journal "local_journal" {
   relabel_rules = discovery.relabel.local_journal.rules
   //Define some labels
     labels        = {
-      component = "journal_export",
       instance = constants.hostname,
       hostname = constants.hostname,
       job = "journal_export",
