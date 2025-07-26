@@ -202,6 +202,8 @@ sudo systemctl enable loki grafana alloy
 * Setup rsyslogd
 * Grab a custom rsyslog file for opening inbound logs and creating new logs under /var/log/external_logs/
 ```
+mkdir -p /var/log/external_logs
+chown syslog /var/log/external_logs
 sudo wget -O /etc/rsyslog.d/remote_logging.conf https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/Rsyslog.d/remote_logging.conf
 ```
 * Restart rsyslog
