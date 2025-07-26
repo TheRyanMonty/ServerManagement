@@ -153,13 +153,11 @@ sudo systemctl restart bind9
 ```
 
 ## Create Self signed certificates for internal services
-* create priv key and csr
 ```
 openssl req -new -newkey rsa:2048 -nodes -keyout montysplace.key -out montysplace.csr -subj "/CN=*.montysplace.local"
-```
-* Create san.cnf:
-```
-[ req ]
+
+echo "[ req ]
+basicConstraints=CA:true
 distinguished_name=req_distinguished_name
 x509_extensions = v3_req
 prompt = no
@@ -172,12 +170,9 @@ subjectAltName = @alt_names
 
 [ alt_names ]
 DNS.1 = *.montysplace.local
-DNS.2 = montysplace.local
-```
+DNS.2 = montysplace.local" > san.cnf
 
-* Generate the certificate
-```
-openssl req -x509 -nodes -days 825 -key montysplace.key -in montysplace.csr -out montysplace.crt -extensions v3_req -config san.cnf
+openssl req -x509 -nodes -days 3650 -key montysplace.key -in montysplace.csr -out montysplace.crt -extensions v3_req -config san.cnf
 ```
 ## Grafana Loki and Alloy testing (not yet functional)
 * Add Grafana repo and install Grafana loki and alloy
