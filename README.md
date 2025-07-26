@@ -227,6 +227,8 @@ sudo apt update; sudo apt install alloy -y
 * Grab alloy config
 ```
 sudo wget -O /etc/alloy/config.alloy https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/Alloy/config.alloy
+sudo sed -i '/CUSTOM_ARGS=/c\CUSTOM_ARGS="--server.http.listen-addr=0.0.0.0:12345"' /etc/default/alloy
+sudo sed -i '/CONFIG_FILE=/c\CONFIG_FILE="/etc/alloy"' /etc/default/alloy
 sudo systemctl start alloy
 sudo systemctl enable alloy
 ```
