@@ -154,25 +154,25 @@ sudo systemctl restart bind9
 
 ## Create Self signed certificates for internal services
 ```
-openssl req -new -newkey rsa:2048 -nodes -keyout montysplace.key -out montysplace.csr -subj "/CN=*.montysplace.local"
+openssl genrsa -aes256 -out montysplace_root_ca.key 4096
 
-echo "[ req ]
-basicConstraints=CA:true
-distinguished_name=req_distinguished_name
-x509_extensions = v3_req
-prompt = no
+openssl req -x509 -new -nodes -key montysplace_root_ca.key -sha256 -days 3650 -out montysplace_root_ca.crt
 
-[ req_distinguished_name ]
-CN = *.montysplace.local
+openssl genrsa -out montysplace_wildcard.key 2048
 
-[ v3_req ]
+echo "[v3_req]
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 
-[ alt_names ]
+[alt_names]
 DNS.1 = *.montysplace.local
-DNS.2 = montysplace.local" > san.cnf
+DNS.2 = montysplace.local" > montysplace_wildcard.ext
 
-openssl req -x509 -nodes -days 3650 -key montysplace.key -in montysplace.csr -out montysplace.crt -extensions v3_req -config san.cnf
+openssl req -new -key montysplace_wildcard.key -out montysplace_wildcard.csr -config <(cat /etc/ssl/openssl.cnf <(printf "[SAN]\nsubjectAltName=DNS:*.montysplace.local,DNS:montysplace.local"))
+
+openssl x509 -req -in montysplace_wildcard.csr -CA montysplace_root_ca.crt -CAkey montysplace_root_ca.key -CAcreateserial -out montysplace_wildcard.crt -days 3650 -sha256 -extfile montysplace_wildcard.ext -extensions v3_req
+
 ```
 ## Grafana Loki and Alloy testing (not yet functional)
 * Add Grafana repo and install Grafana loki and alloy
