@@ -22,35 +22,25 @@ loki.source.file "remote_host_logs" {
   // Use targets defined in local.file_match
   targets    = local.file_match.remote_host_logs.targets
   // Send logs to the local Loki instance
-  forward_to = [loki.write.to_loki.receiver]
+  forward_to = [loki.process.remote_host_logs_relabels.receiver]
 }
 
-//loki.process "syslog_relabels" {
+loki.process "remote_host_logs_relabels" {
     // For the syslog server, grab the hostname and associate it to the instance value
-    // Also if omada, <ErrCount>0</ErrCount> is caught, downgrade that to info from error
+    stage.regex {
+        expression = "^[^ ]+ (?P<hostname>[^ ]+)"
+        labels_from_groups = true
+    }
+
+    // If omada, <ErrCount>0</ErrCount> is caught, downgrade that to info from error
 //    stage.regex {
-//        source = "__log__"
-//        expression = `^\S+\s+(\S+)`
+//        expression = ".*<ErrCount>0</ErrCount>.*"
 //    }
-//
 //    stage.labels {
 //        values = {
-//            hostname = "$1",
+//            level = "info",
 //        }
 //    }
 
-//    forward_to = [loki.write.to_loki.receiver]
-//}
-
-//loki.relabel "syslog_relabels" {
-    //extract the second space delimited field from the log line and associate it to instance
-    //this is for hosts with other hosts sending rsyslog information to it
-//    rule {
-//        action = "replace"
-//        source_labels = "__log__" 
-//        regex = `^\S+\s+(\S+)`
-//        target_label = "hostname" 
-//    }
-//
-//    forward_to = [loki.write.to_loki.receiver]
-//}
+    forward_to = [loki.write.to_loki.receiver]
+}
