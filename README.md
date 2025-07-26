@@ -200,23 +200,9 @@ sudo systemctl start loki grafana alloy
 sudo systemctl enable loki grafana alloy
 ```
 * Setup rsyslogd
+* Grab a custom rsyslog file for opening inbound logs and creating new logs under /var/log/external_logs/
 ```
-vi /etc/rsyslogd.conf
-```
-* Uncomment the module and input lines:
-```
-# provides UDP syslog reception
-module(load="imudp")
-input(type="imudp" port="514")
-
-# provides TCP syslog reception
-module(load="imtcp")
-input(type="imtcp" port="514")
-```
-* Add the following lines under the uncommented lines to create custom logfiles per host
-```
-$template remote-incoming-logs,"/var/log/%HOSTNAME%_%PROGRAMNAME%logs.log"
-*.* ?remote-incoming-logs
+sudo wget -O /etc/rsyslog.d/remote_logging.conf https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/Rsyslog.d/remote_logging.conf
 ```
 * Restart rsyslog
 ```
