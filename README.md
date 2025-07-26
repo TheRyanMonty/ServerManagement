@@ -191,6 +191,12 @@ sudo chown -R loki:loki /var/lib/loki
 
 sudo wget -O /etc/loki/config.yml https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/Loki/config.yml
 
+sudo sed -i '/CUSTOM_ARGS=/c\CUSTOM_ARGS="--server.http.listen-addr=0.0.0.0:12345"' /etc/default/alloy
+sudo sed -i '/CONFIG_FILE=/c\CONFIG_FILE="/etc/alloy"' /etc/default/alloy
+
+```
+* Enable and start the new services
+```
 sudo systemctl start loki grafana alloy
 sudo systemctl enable loki grafana alloy
 ```
