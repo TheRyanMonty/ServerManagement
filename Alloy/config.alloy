@@ -39,7 +39,7 @@ discovery.relabel "local_journal" {
   rule {
     // Extract systemd unit information into a service label
     source_labels = ["__journal__systemd_unit"]
-    target_label  = "service"
+    target_label  = "server_service"
   }
   rule {
     // Extract boot ID information into a label
