@@ -1,0 +1,56 @@
+// /////////////
+// LOGS
+// /////////////
+
+// Define which log files to collect for node_exporter
+local.file_match "remote_host_logs" {
+  path_targets = [{
+    // Target localhost for log collection
+    __address__ = "localhost",
+    // Collect standard system logs
+    //__path__    = "/var/log/{syslog,messages,*.log}",
+    __path__    = "/var/log/external_logs/*.log",
+    // Add instance label with hostname
+    instance    = constants.hostname,
+    // Add job label for logs
+    job         = "remote_log_export",
+  }]
+}
+
+// Collect logs from files for node_exporter
+loki.source.file "remote_host_logs" {
+  // Use targets defined in local.file_match
+  targets    = local.file_match.remote_host_logs.targets
+  // Send logs to the local Loki instance
+  forward_to = [loki.write.to_loki.receiver]
+}
+
+//loki.process "syslog_relabels" {
+    // For the syslog server, grab the hostname and associate it to the instance value
+    // Also if omada, <ErrCount>0</ErrCount> is caught, downgrade that to info from error
+//    stage.regex {
+//        source = "__log__"
+//        expression = `^\S+\s+(\S+)`
+//    }
+//
+//    stage.labels {
+//        values = {
+//            hostname = "$1",
+//        }
+//    }
+
+//    forward_to = [loki.write.to_loki.receiver]
+//}
+
+//loki.relabel "syslog_relabels" {
+    //extract the second space delimited field from the log line and associate it to instance
+    //this is for hosts with other hosts sending rsyslog information to it
+//    rule {
+//        action = "replace"
+//        source_labels = "__log__" 
+//        regex = `^\S+\s+(\S+)`
+//        target_label = "hostname" 
+//    }
+//
+//    forward_to = [loki.write.to_loki.receiver]
+//}
