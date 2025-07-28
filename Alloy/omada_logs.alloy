@@ -1,0 +1,43 @@
+// /////////////
+// LOGS
+// /////////////
+
+// Define which log files to collect from omada
+local.file_match "omada_network_logs" {
+  path_targets = [{
+    __address__ = "localhost",
+    __path__    = "/var/log/external_logs/omada.montysplace.local.log",
+    instance    = constants.hostname,
+    job         = "omada_network_logs",
+  }]
+}
+
+// Collect logs from files from omada
+loki.source.file "omada_network_logs" {
+  targets     = local.file_match.omada_network_logs.targets
+  forward_to = [loki.process.omada_network_logs_relabels.receiver]
+}
+
+// Processing pipeline for omada logs
+loki.process "omada_network_logs_relabels" {
+  // Extract all leading fields and the full message ---
+  stage.regex {
+    expression = "^(?P<log_timestamp_full>\\S+)[[:space:]]+(?P<hostname>\\S+)[[:space:]]+\\s*(?P<internal_event_timestamp>\\S+[[:space:]]+\\S+)\\s*[[:space:]]+(?P<controller_source>.*?)[[:space:]]+-[[:space:]]+-[[:space:]]+-[[:space:]]+(?P<message>.*)"
+  }
+
+  // Assign all captured and extracted fields as labels ---
+  stage.labels {
+    values = {
+      log_timestamp_full = "log_timestamp_full",
+      hostname = "hostname",
+      internal_event_timestamp = "internal_event_timestamp",
+      controller_source = "controller_source",
+      message = "message",
+      operation = "operation",
+      details = "details",
+    }
+  }
+
+  // Forward the processed logs to the Loki write component
+  forward_to = [loki.write.to_loki.receiver]
+}
