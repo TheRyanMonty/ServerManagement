@@ -232,4 +232,12 @@ sudo sed -i '/CONFIG_FILE=/c\CONFIG_FILE="/etc/alloy"' /etc/default/alloy
 sudo systemctl start alloy
 sudo systemctl enable alloy
 ```
-TODO: Determine ways to isolate appropriate data from foreign system for searching and aggregation
+* Install prometheus
+```
+apt-get install prometheus -y
+```
+* Grab configuration files
+```
+sudo wget -O /etc/systemd/system/prometheus.service https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/Prometheus/prometheus.service
+sudo wget -O /etc/prometheus/prometheus.yml https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/Prometheus/prometheus.yml
+```
