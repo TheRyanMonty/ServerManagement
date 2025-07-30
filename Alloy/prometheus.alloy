@@ -1,0 +1,51 @@
+// =============================================================================
+// METRICS CONFIGURATION (for Prometheus)
+// =============================================================================
+
+// Expose basic host-level metrics using Alloy's built-in node_exporter functionality.
+// Prometheus will scrape Alloy's default HTTP endpoint (port 12345) for these metrics.
+prometheus.exporter.unix "host_system_metrics" {
+  enable_collectors = [
+    "cpu",
+    "diskstats",
+    "filesystem",
+    "loadavg",
+    "meminfo",
+    "netdev",
+    "systemd",
+    "textfile",
+    "nvme",
+    "netstat",
+    "tcpstat",
+    "uname",
+  ]
+
+  // IMPORTANT: These are nested blocks *within* prometheus.exporter.unix
+  // They configure the specific collectors listed above.
+  filesystem {
+    mount_points_exclude = "^/(dev|proc|sys|var/lib/docker/.+)($|/)"
+    fs_types_exclude = "^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso966)"
+  }
+
+  disk { // Configures the diskstats collector.
+    device_exclude = "^(ram|loop|fd|(h|s|v|xv)d[a-z]|nvme\\d+n\\d+p)\\d+$"
+    // device_include = "sd[a-z]" [cite: 72]
+  }
+
+  // Add more collector configuration blocks as needed, e.g.:
+  // cpu {
+  //   guest = true [cite: 50]
+  // }
+  // systemd {
+  //   enable_restarts = true [cite: 153]
+  // }
+}
+
+
+// =============================================================================
+// METRICS EXPOSURE (Alloy's internal HTTP server)
+// =============================================================================
+
+// Alloy by default exposes its metrics on http://0.0.0.0:12345/metrics.
+// The metrics from prometheus.exporter.unix "host_system_metrics" will be
+// exposed via this endpoint.
