@@ -144,13 +144,59 @@ ExecStart=
 ExecStart=/usr/sbin/named -4 -f $OPTIONS
 ```
 
-* Pull down DB files
-My current 3 db files (db.montysplace.local db.10.50.1 and db.10.50.10) and named.conf.options are backed up on my NAS under server backups\dns, they go in /etc/bind/
+* Setup Backup
+Setup backup script to backup the the directories and move off node (to NAS) on primary dns server
+```
+tar -czf $LOCAL_FILE /etc/bind /var/lib/bind
+```
+
+* Setup TSIG encryption between primary and secondary DNS servers for security during syncronization
+* Run this from primary dns server
+```
+tsig-keygen -a HMAC-SHA256 tsig-key > /etc/bind/tsig.key
+chown root:bind /etc/bind/tsig.key
+chmod 640 /etc/bind/tsig.key
+```
+* Include the key on the primary dns server: At the top of /etc/bind/named.conf.local, add:
+```
+include "/etc/bind/tsig.key";
+```
+* Add this line in primary and reverse lookup zones:
+```
+allow-transfer { key "tsig-key"; };
+````
+example:
+```
+zone "montysplace.local" {
+    type master;
+    file "/etc/bind/db.montysplace.local";
+    allow-transfer { key "tsig-key"; }; # Replaces the IP address
+};
+```
+* On secondary node:
+```
+echo 'key "tsig-key" {
+        algorithm hmac-sha256;
+        secret "m50yYW6E5gKAiwJhxj6wQ24R/2ZC1AoqCddqx11mM/o=";
+};'>/etc/bind/tsig.key
+
+chown root:bind /etc/bind/tsig.key
+chmod 640 /etc/bind/tsig.key
+```
+* Include the key and server clause in /etc/bind/named.conf.local
+```
+include "/etc/bind/tsig.key";
+
+server 10.50.1.19 {
+    keys { "tsig-key"; };
+};
+```
 
 * Restart bind
 ```
 sudo systemctl restart bind9
 ```
+
 
 ## Create Self signed certificates for internal services
 ```
