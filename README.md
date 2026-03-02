@@ -322,7 +322,7 @@ docker run -d \
   -v /etc/ssl/montysplace/fullchain.pem:/etc/apache2/ssl/nextcloud.crt \
   -v /etc/ssl/montysplace/privkey.pem:/etc/apache2/ssl/nextcloud.key \
   --restart always \
-  -e NEXTCLOUD_TRUSTED_DOMAINS="servermgr1.montysplace.local" \
+  -e NEXTCLOUD_TRUSTED_DOMAINS="nextcloud.montysplace.local" \
   -e NEXTCLOUD_ADMIN_USER="monty" \
   -e NEXTCLOUD_ADMIN_PASSWORD="<PASSWORD>" \
   -e MYSQL_DATABASE=nextcloud \
