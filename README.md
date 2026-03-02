@@ -282,6 +282,64 @@ sudo systemctl enable alloy
 ```
 apt-get install prometheus -y
 ```
+## Deploy NextCloud
+* Setup NFS to NAS devices
+Example /etc/fstab entry
+```
+10.50.1.20:/volume1/NextCloud  /mnt/nextcloud  nfs  defaults,nofail,_netdev,x-systemd.automount  0  0
+```
+* Ensure docker is installed and rollout mariadb and nextcloud, ensure only 443 is reachable
+```
+sudo apt install docker.io -y
+
+sudo chown -R 33:33 /mnt
+sudo chmod -R 750 /mnt
+
+# Deploy MariaDB container
+docker run -d \
+  --name nextcloud-db \
+  --restart always \
+  -v nextcloud_mysql:/var/lib/mysql \
+  -e MYSQL_ROOT_PASSWORD="<PASSWORD>" \
+  -e MYSQL_DATABASE=nextcloud \
+  -e MYSQL_USER=nextcloud \
+  -e MYSQL_PASSWORD="<PASSWORD>" \
+  mariadb:10.6 --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+
+# Start the container
+docker run -d \
+  --name nextcloud-local \
+  -p 8443:443 \
+  --link nextcloud-db:db \
+  -v nextcloud_config:/var/www/html \
+  -v /mnt/nextcloud:/var/www/html/data \
+  -v /etc/ssl/montysplace/fullchain.pem:/etc/apache2/ssl/nextcloud.crt \
+  -v /etc/ssl/montysplace/privkey.pem:/etc/apache2/ssl/nextcloud.key \
+  --restart always \
+  -e NEXTCLOUD_TRUSTED_DOMAINS="servermgr1.montysplace.local" \
+  -e NEXTCLOUD_ADMIN_USER="monty" \
+  -e NEXTCLOUD_ADMIN_PASSWORD="<PASSWORD>" \
+  -e MYSQL_DATABASE=nextcloud \
+  -e MYSQL_USER=nextcloud \
+  -e MYSQL_PASSWORD="<PASSWORD>" \
+  -e MYSQL_HOST=db \
+  -e PHP_MEMORY_LIMIT=2G \
+  -e PHP_UPLOAD_LIMIT=10G \
+  -e APACHE_BODY_LIMIT=1073741824 \
+  nextcloud
+
+# 2. Enable the SSL module, fix the config file paths and restart apache in the container
+docker exec -u 0 nextcloud-local a2enmod ssl
+docker exec -u 0 nextcloud-local sed -i 's|/etc/ssl/certs/ssl-cert-snakeoil.pem|/etc/apache2/ssl/nextcloud.crt|g' /etc/apache2/sites-available/default-ssl.conf
+docker exec -u 0 nextcloud-local sed -i 's|/etc/ssl/private/ssl-cert-snakeoil.key|/etc/apache2/ssl/nextcloud.key|g' /etc/apache2/sites-available/default-ssl.conf
+docker exec -u 0 nextcloud-local a2ensite default-ssl
+docker exec -u 0 nextcloud-local service apache2 restart
+
+#Nuclear command for docker docker system prune -a --volumes
+```
+
+* Open the web interface at https://servermgr1.montysplace.local:8443
+
 * Grab configuration files
 ```
 sudo wget -O /etc/systemd/system/prometheus.service https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/Prometheus/prometheus.service
