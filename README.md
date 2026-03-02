@@ -282,6 +282,12 @@ sudo systemctl enable alloy
 ```
 apt-get install prometheus -y
 ```
+* Grab configuration files
+```
+sudo wget -O /etc/systemd/system/prometheus.service https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/Prometheus/prometheus.service
+sudo wget -O /etc/prometheus/prometheus.yml https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/Prometheus/prometheus.yml
+```
+
 ## Deploy NextCloud
 * Setup NFS to NAS devices
 Example /etc/fstab entry
@@ -340,8 +346,3 @@ docker exec -u 0 nextcloud-local service apache2 restart
 
 * Open the web interface at https://servermgr1.montysplace.local:8443
 
-* Grab configuration files
-```
-sudo wget -O /etc/systemd/system/prometheus.service https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/Prometheus/prometheus.service
-sudo wget -O /etc/prometheus/prometheus.yml https://raw.githubusercontent.com/TheRyanMonty/ServerManagement/refs/heads/main/Prometheus/prometheus.yml
-```
